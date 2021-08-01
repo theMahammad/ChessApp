@@ -1,0 +1,16 @@
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\bin\Debug\net5.0\SelectCustomAmountRandomName.exe
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\bin\Debug\net5.0\SelectCustomAmountRandomName.deps.json
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\bin\Debug\net5.0\SelectCustomAmountRandomName.runtimeconfig.json
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\bin\Debug\net5.0\SelectCustomAmountRandomName.runtimeconfig.dev.json
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\bin\Debug\net5.0\SelectCustomAmountRandomName.dll
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\bin\Debug\net5.0\ref\SelectCustomAmountRandomName.dll
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\bin\Debug\net5.0\SelectCustomAmountRandomName.pdb
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\obj\Debug\net5.0\SelectCustomAmountRandomName.csproj.AssemblyReference.cache
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\obj\Debug\net5.0\SelectCustomAmountRandomName.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\obj\Debug\net5.0\SelectCustomAmountRandomName.AssemblyInfoInputs.cache
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\obj\Debug\net5.0\SelectCustomAmountRandomName.AssemblyInfo.cs
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\obj\Debug\net5.0\SelectCustomAmountRandomName.csproj.CoreCompileInputs.cache
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\obj\Debug\net5.0\SelectCustomAmountRandomName.dll
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\obj\Debug\net5.0\ref\SelectCustomAmountRandomName.dll
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\obj\Debug\net5.0\SelectCustomAmountRandomName.pdb
+C:\Users\hssjx\source\repos\MySelfProjects\SelectCustomAmountRandomName\obj\Debug\net5.0\SelectCustomAmountRandomName.genruntimeconfig.cache
