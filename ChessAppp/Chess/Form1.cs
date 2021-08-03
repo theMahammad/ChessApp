@@ -15,13 +15,14 @@ namespace Chess
         public Form1()
         {
             InitializeComponent();
-            this.pnl_chess_arena.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.pnl_chess_arena.Anchor = AnchorStyles.None;
             Array.ForEach(blackFigures, figure => figure.Team = Team.Black);
             Array.ForEach(whiteFigures, figure => figure.Team = Team.White);
-
+           
 
 
         }
+        Team CurrentSequence = Team.White;
         Check[,] buttons = new Check[8, 8];
         static Image blackBishop = Bitmap.FromFile(@"PNG\Black_TheBishop.png");
         static Image blackRook = Bitmap.FromFile(@"PNG\Black_TheRook.png");
@@ -82,6 +83,22 @@ namespace Chess
                 }
             }
         }
+        bool isThisCheckAvailableForSelectedFigure(Check button,List<Coordinate> availableCoordinates)
+        {
+            if(availableCoordinates is not null)
+            {
+                foreach (Coordinate element in availableCoordinates)
+                {
+                    if (buttons[element.Row, element.Column] == button)
+                    {
+                        return true;
+
+                    }
+                }
+            }
+            
+            return false;
+        }
         void setButtonLocation()
         {
             pnl_chess_arena.Controls.Clear();
@@ -98,7 +115,7 @@ namespace Chess
                 for (int col = 0; col <= buttons.GetUpperBound(1); col++)
                 {
                     Check button = new Check();
-
+                    
                     button.Height = Convert.ToInt32(heightOfArena / 8);
                     button.Width = Convert.ToInt32(widthOfArena / 8);
                     button.Top = top;
@@ -138,7 +155,7 @@ namespace Chess
 
             }
         }
-
+        List<Coordinate> availableCoordinates = null;
         List<int> getCheckIndexes(Control button)
         {
             List<int> indexes = new();
@@ -181,64 +198,122 @@ namespace Chess
             setButtonLocation();
             setBlackFigureLocations();
             SetWhiteFigureLocations();
-            foreach (Figure figure in blackFigures)
+            foreach (Figure figure in blackFigures.Concat(whiteFigures))
             {
-                if (figure is Pawn)
-                {
-                    figure.GotFocus += (s, e) =>
+                
+                    figure.Click += (s, e) =>
                     {
-                        Pawn pawnFigure = (Pawn)figure;
-
-
-                        List<int> indexes = getCheckIndexes(pawnFigure.Parent);
-                        List<Coordinate> coordinates = pawnFigure.ShowMoveOptions(indexes[0], indexes[1], buttons);
-                        focusedFigure = pawnFigure;
                         
-                        for (int i = 0; i < coordinates.Count; i++)
+                        if (focusedFigure is null || focusedFigure.Team == figure.Team)
                         {
-                            int row = coordinates[i].Row;
-                            int column = coordinates[i].Column;
-                            buttons[row, column].BackColor = Color.GreenYellow;
-                            setDisabledOthers(coordinates);
-                            buttons[row, column].Enabled = true;
-                            if (buttons[row, column].Controls.Count > 0) {
-                                if((buttons[row,column].Controls[0] as Figure).Team != figure.Team)
-                                {
-                                    buttons[row, column].Controls[0].Hide();
-                                }
-                                }
-                            buttons[row, column].Click += (s, e) =>
+                            SetToDefaultColor();
+                            focusedFigure = null;
+                            focusedFigure = figure ;
+                            lbl_focusedFigure.Text = focusedFigure.Team.ToString();
+                            if (focusedFigure.Team == CurrentSequence)
                             {
-                                MessageBox.Show(focusedFigure.GetType().ToString());
-                                figure.Move(buttons[row, column]);
-                                
-                                
-                            };
-                            
-                            
+                                List<int> indexes = getCheckIndexes(figure.Parent);
+                                availableCoordinates = figure.ShowMoveOptions(indexes[0], indexes[1], buttons);
 
-                           
-                        };
+
+                                for (int i = 0; i < availableCoordinates.Count; i++)
+                                {
+                                    int row = availableCoordinates[i].Row;
+                                    int column = availableCoordinates[i].Column;
+                                    buttons[row, column].BackColor = Color.GreenYellow;
+
+
+
+                                    buttons[row, column].Click += (s, e) =>
+                                    {
+
+                                        if (focusedFigure is not null && focusedFigure.Team == CurrentSequence && isThisCheckAvailableForSelectedFigure(buttons[row, column], availableCoordinates))
+                                        {
+                                            figure.Move(buttons[row, column]);
+                                            if (focusedFigure.Team == Team.White)
+                                            {
+                                                CurrentSequence = Team.Black;
+                                            }
+                                            else
+                                            {
+                                                CurrentSequence = Team.White;
+                                            }
+
+                                            focusedFigure = null;
+                                            SetToDefaultColor();
+                                            availableCoordinates.Clear();
+                                        }
+
+
+
+
+
+                                    };
+
+                                }
+                            }
+                        }
+                        else if(focusedFigure.Team!=figure.Team && isThisCheckAvailableForSelectedFigure(figure.Parent as Check, availableCoordinates))
+                        {
+                           Figure oppositeFigure = figure; 
+                          
+                            CurrentSequence = oppositeFigure.Team;
+                            oppositeFigure.Parent.Controls.Add(focusedFigure);
+                            
+                            oppositeFigure.Parent.Controls.Remove(oppositeFigure);
+                            focusedFigure = null;
+                            SetToDefaultColor();
+                            
+                            availableCoordinates.Clear();
+                        }
+                        else
+                        {
+                            focusedFigure = null;
+                        }
+                       
+                        /*
+                         
+                                foreach (Figure oppositeFigure in blackFigures.Concat(whiteFigures))
+                                {
+
+                                    oppositeFigure.Click += (s, e) =>
+                                    {
+                                        if(focusedFigure is not null)
+                                        {
+                                            if (focusedFigure != oppositeFigure)
+                                            {
+                                                if (focusedFigure.Team != oppositeFigure.Team && isThisCheckAvailableForSelectedFigure(oppositeFigure.Parent as Check, availableCoordinates))
+                                                {
+                                                   
+
+                                                }
+                                            }
+                                        
+                                        
+                                        }
+                                    };
+                                }*/
+
+
 
 
                     };
 
+                        }
+            pnl_chess_arena.Controls[0].Focus();
+                    }
 
 
 
 
 
-                };
-                figure.LostFocus += (s, e) =>
-                {
-                    SetToDefaultColor();
-                   
+                    
+                
+             
+                
+            
 
-
-                };
-            }
-
-        }
+        
     
 
 

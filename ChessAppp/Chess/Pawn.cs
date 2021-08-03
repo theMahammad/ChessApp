@@ -55,35 +55,62 @@ namespace Chess
             {
                 limit = 2;
             }
-            if (row == 7)
+            if(this.Team == Team.Black)
             {
-                limit = 0;
-            }
-                
-            for (int i = row+1; i <= row + limit; i++)
-            {
-                if (buttons[i, column].isFull == false)
+                if (row == 7)
                 {
-                    availableCoordinates.Add(new(i, column));
+                    limit = 0;
                 }
-                
-                for (int j =column>0?column-1:1; j <=column+1 ; j += 2) {
-
-
-                    if (buttons[i, j].isFull)
+                //Normal gediş
+                for (int i = row + 1; i <= row + limit; i++)
+                {
+                    if (buttons[i, column].isFull == false)
                     {
-                        Figure figure = (Figure)buttons[i, j].Controls[0];
-                        if (figure.Team != this.Team)
-                        {
-                            availableCoordinates.Add(new Coordinate(i, j));
-                        }
+                        availableCoordinates.Add(new(i, column));
                     }
+                }  
+                   
+                //Rəqibin daşını yemək üçün 
+                
+                for(int i = row + 1; i <= row + 1; i++)
+                {
 
+                    int colLimit = column < 6 ? column + 1 : column;
+                    for (int j = column > 0 ? column - 1 : column + 1; j <= colLimit; j += 2)
+                    {
+
+
+                        if (buttons[i, j].isFull)
+                        {
+                            Figure figure = (Figure)buttons[i, j].Controls[0];
+                            if (figure.Team != this.Team)
+                            {
+                                availableCoordinates.Add(new Coordinate(i, j));
+                            }
+                        }
+
+                    }
                 }
 
-               
 
+
+                }
+            
+            else
+            {
+                if (row == 0)
+                {
+                    limit = 0;
+                }
+                for(int i = row - 1; i >= row - limit; i--)
+                {
+                    if (buttons[i, column].isFull == false)
+                    {
+                        availableCoordinates.Add(new(i, column));
+                    }
+                }
             }
+            
             return availableCoordinates;
         }
     }
