@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Chess
 {
@@ -26,12 +27,12 @@ namespace Chess
             throw new NotImplementedException();
         }
 
-        public override void Move()
+        public override void Move(Check button)
         {
             throw new NotImplementedException();
         }
 
-        public override void ShowMoveOptions()
+        public override List<Coordinate> ShowMoveOptions(int row, int column, Check[,] buttons)
         {
             throw new NotImplementedException();
         }

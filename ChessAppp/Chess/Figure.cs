@@ -8,12 +8,12 @@ using System.Drawing;
 namespace Chess
 {
     abstract class Figure:Button
-    {
+    {   public Team Team { get; set; }
         public Image Image { get; set; }
         public string Color { get; set; }
         public string Name { get; set; }
-        public abstract void ShowMoveOptions();
-        public abstract void Move();
+        public abstract List<Coordinate> ShowMoveOptions(int row, int column, Check[,] buttons);
+        public abstract void Move(Check button);
         public abstract void CaptureOppositeFigure();
         public abstract void CapturedByOppositeFigure();
         public Figure(string name,Image bgImg)

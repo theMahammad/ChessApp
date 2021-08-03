@@ -24,12 +24,11 @@ namespace Chess
             throw new NotImplementedException();
         }
 
-        public override void Move()
+        public override void Move(Check button)
         {
             throw new NotImplementedException();
         }
-
-        public override void ShowMoveOptions()
+        public override List<Coordinate> ShowMoveOptions(int row, int column, Check[,] buttons)
         {
             throw new NotImplementedException();
         }

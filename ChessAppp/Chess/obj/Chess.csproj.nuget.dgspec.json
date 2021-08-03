@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hssjx\\source\\repos\\MySelfProjects\\Chess\\Chess.csproj": {}
+    "C:\\Users\\hssjx\\OneDrive\\Masaüstü\\Şahma\\MySelfProjects\\ChessApp\\ChessAppp\\Chess\\Chess.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hssjx\\source\\repos\\MySelfProjects\\Chess\\Chess.csproj": {
+    "C:\\Users\\hssjx\\OneDrive\\Masaüstü\\Şahma\\MySelfProjects\\ChessApp\\ChessAppp\\Chess\\Chess.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hssjx\\source\\repos\\MySelfProjects\\Chess\\Chess.csproj",
+        "projectUniqueName": "C:\\Users\\hssjx\\OneDrive\\Masaüstü\\Şahma\\MySelfProjects\\ChessApp\\ChessAppp\\Chess\\Chess.csproj",
         "projectName": "Chess",
-        "projectPath": "C:\\Users\\hssjx\\source\\repos\\MySelfProjects\\Chess\\Chess.csproj",
+        "projectPath": "C:\\Users\\hssjx\\OneDrive\\Masaüstü\\Şahma\\MySelfProjects\\ChessApp\\ChessAppp\\Chess\\Chess.csproj",
         "packagesPath": "C:\\Users\\hssjx\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hssjx\\source\\repos\\MySelfProjects\\Chess\\obj\\",
+        "outputPath": "C:\\Users\\hssjx\\OneDrive\\Masaüstü\\Şahma\\MySelfProjects\\ChessApp\\ChessAppp\\Chess\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
