@@ -10,8 +10,11 @@ namespace Chess
 {
     class Knight : Figure
     {
-      
 
+        public override object Clone()
+        {
+            return MemberwiseClone();
+        }
         public Knight(string name, Image bgImg) : base(name, bgImg)
         {
         }

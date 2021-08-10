@@ -45,6 +45,8 @@ namespace Chess
         Figure[] whiteFigures = new Figure[] { new Rook("Top1", whiteRook), new Knight("At1", whiteKnight), new Bishop("Fil1", whiteBishop), new Queen("Vəzir", whiteQueen), new King("Şah", whiteKing), new Bishop("Fil2", whiteBishop), new Knight("At2", whiteKnight), new Rook("Top2", whiteRook), new Pawn("Piyada1", whitePawn), new Pawn("Piyada2", whitePawn), new Pawn("Piyada3", whitePawn), new Pawn("Piyada4", whitePawn), new Pawn("Piyada5", whitePawn), new Pawn("Piyada6", whitePawn), new Pawn("Piyada7", whitePawn), new Pawn("Piyada8", whitePawn) };
 
         List<Coordinate> indexesLastArea = new();
+        List<Figure> capturedBlackFigures = new();
+        List<Figure> capturedWhiteFigures = new();
         void setBlackFigureLocations()
         {
             int count = 0;
@@ -64,7 +66,43 @@ namespace Chess
                 }
             }
         }
-       
+       void SetLocationByItsTeam(Figure capturedFigure)
+        {
+            if (capturedFigure.Team == Team.Black)
+            {
+                capturedBlackFigures.Add(capturedFigure);
+                
+            }
+            else
+            {
+                capturedWhiteFigures.Add(capturedFigure);
+            }
+            capturedFigure.Enabled=false;
+            RefreshOutsideOfPanel();
+                
+                
+           
+        }
+        void RefreshOutsideOfPanel()
+        {
+            int top = 0;
+            int left = 0;
+            foreach (Figure figure in capturedBlackFigures)
+            {
+                
+                figure.Top = top;
+                figure.Left =left ;
+                left += 55;
+                this.Controls.Add(figure);
+                if (left >110) {
+
+                    top += 55;
+                    left = 0;
+
+                        }
+                
+            }
+        }
         void SetWhiteFigureLocations()
         {
             int count = 0;
@@ -167,6 +205,7 @@ namespace Chess
                     {
                         indexes.Add(row);
                         indexes.Add(column);
+                        break;
                     }
                 }
             }
@@ -203,13 +242,14 @@ namespace Chess
                 
                     figure.Click += (s, e) =>
                     {
-                        
-                        if (focusedFigure is null || focusedFigure.Team == figure.Team)
+                       
+                        if (focusedFigure is  null || focusedFigure.Team == figure.Team)
                         {
                             SetToDefaultColor();
-                            focusedFigure = null;
-                            focusedFigure = figure ;
-                            lbl_focusedFigure.Text = focusedFigure.Team.ToString();
+
+                            focusedFigure = figure;
+                            lbl_focusedFigure.Text = focusedFigure.Team.ToString()+" "+focusedFigure.Name.ToString();
+
                             if (focusedFigure.Team == CurrentSequence)
                             {
                                 List<int> indexes = getCheckIndexes(figure.Parent);
@@ -229,7 +269,7 @@ namespace Chess
 
                                         if (focusedFigure is not null && focusedFigure.Team == CurrentSequence && isThisCheckAvailableForSelectedFigure(buttons[row, column], availableCoordinates))
                                         {
-                                            figure.Move(buttons[row, column]);
+                                            focusedFigure.Move(buttons[row, column]);
                                             if (focusedFigure.Team == Team.White)
                                             {
                                                 CurrentSequence = Team.Black;
@@ -239,9 +279,10 @@ namespace Chess
                                                 CurrentSequence = Team.White;
                                             }
 
-                                            focusedFigure = null;
+                                            
                                             SetToDefaultColor();
                                             availableCoordinates.Clear();
+                                            focusedFigure = null;
                                         }
 
 
@@ -253,22 +294,33 @@ namespace Chess
                                 }
                             }
                         }
-                        else if(focusedFigure.Team!=figure.Team && isThisCheckAvailableForSelectedFigure(figure.Parent as Check, availableCoordinates))
+                        else if (focusedFigure.Team != figure.Team && isThisCheckAvailableForSelectedFigure(figure.Parent as Check, availableCoordinates))
                         {
-                           Figure oppositeFigure = figure; 
-                          
-                            CurrentSequence = oppositeFigure.Team;
-                            oppositeFigure.Parent.Controls.Add(focusedFigure);
+                            Figure oppositeFigure = figure;
                             
+
+
+                           
+                            List<int> indexes = getCheckIndexes(oppositeFigure.Parent);
                             oppositeFigure.Parent.Controls.Remove(oppositeFigure);
+
+
+                            (focusedFigure.Parent as Check).isFull = false;
+                            buttons[indexes[0], indexes[1]].Controls.Add(focusedFigure);
+                            
                             focusedFigure = null;
+                            
+                            SetLocationByItsTeam(oppositeFigure);
+                            CurrentSequence = oppositeFigure.Team;
+                            
                             SetToDefaultColor();
                             
                             availableCoordinates.Clear();
+                            
                         }
                         else
                         {
-                            focusedFigure = null;
+                            focusedFigure = figure;
                         }
                        
                         /*
@@ -301,6 +353,13 @@ namespace Chess
 
                         }
             pnl_chess_arena.Controls[0].Focus();
+            foreach(Check check in buttons)
+            {
+                check.Click += (s, e) =>
+                {
+                    MessageBox.Show(check.isFull.ToString());
+                };
+            }
                     }
 
 

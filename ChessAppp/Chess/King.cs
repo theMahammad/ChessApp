@@ -26,11 +26,14 @@ namespace Chess
             throw new NotImplementedException();
         }
 
-       
 
         public override void Move(Check button)
         {
             throw new NotImplementedException();
+        }
+        public override object Clone()
+        {
+            return MemberwiseClone();
         }
 
         public override List<Coordinate> ShowMoveOptions(int row, int column, Check[,] buttons)

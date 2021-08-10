@@ -7,15 +7,20 @@ using System.Windows.Forms;
 using System.Drawing;
 namespace Chess
 {
-    abstract class Figure:Button
+    abstract class Figure:Button,ICloneable
     {   public Team Team { get; set; }
-        public Image Image { get; set; }
+        public  new Image Image { get; set; }
         public string Color { get; set; }
-        public string Name { get; set; }
+        public new string Name { get; set; }
         public abstract List<Coordinate> ShowMoveOptions(int row, int column, Check[,] buttons);
-        public abstract void Move(Check button);
+        public new abstract void Move(Check button);
         public abstract void CaptureOppositeFigure();
         public abstract void CapturedByOppositeFigure();
+
+
+
+        public abstract object Clone();
+
         public Figure(string name,Image bgImg)
         {
             this.Name = name;

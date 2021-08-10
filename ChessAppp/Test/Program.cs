@@ -15,7 +15,13 @@ namespace Test
     {
         static void Main(string[] args)
         {
+            TestClass test = new();
+            List < TestClass > list = new();
+            list.Add((TestClass)test.Clone());
+            test.name = "Mehemmed";
+            Console.WriteLine(list[0].name);
             
+
         }
     }
 }

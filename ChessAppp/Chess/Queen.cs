@@ -9,8 +9,11 @@ namespace Chess
 {
     class Queen : Figure
     {
-      
 
+        public override object Clone()
+        {
+            return MemberwiseClone();
+        }
         public Queen(string name, Image bgImg) : base(name, bgImg)
         {
         }

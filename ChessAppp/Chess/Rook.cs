@@ -10,7 +10,10 @@ namespace Chess
 {
     class Rook : Figure
     {
-       
+        public override object Clone()
+        {
+            return MemberwiseClone();
+        }
 
         public Rook(string name, Image bgImg) : base(name, bgImg)
         {
