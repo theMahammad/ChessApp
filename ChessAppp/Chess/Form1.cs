@@ -24,22 +24,22 @@ namespace Chess
         }
         Team CurrentSequence = Team.White;
         Check[,] buttons = new Check[8, 8];
-        static Image blackBishop = Bitmap.FromFile(@"PNG\Black_TheBishop.png");
-        static Image blackRook = Bitmap.FromFile(@"PNG\Black_TheRook.png");
-        static Image blackKnight = Bitmap.FromFile(@"PNG\Black_TheKnight.png");
-        static Image blackPawn = Bitmap.FromFile(@"PNG\Black_ThePawn.png");
-        static Image blackQueen = Bitmap.FromFile(@"PNG\Black_TheQueen.png");
-        static Image blackKing = Bitmap.FromFile(@"PNG\Black_TheKing.png");
+        static readonly Image blackBishop = Bitmap.FromFile(@"PNG\Black_TheBishop.png");
+        static readonly Image blackRook = Bitmap.FromFile(@"PNG\Black_TheRook.png");
+        static readonly Image blackKnight = Bitmap.FromFile(@"PNG\Black_TheKnight.png");
+        static readonly Image blackPawn = Bitmap.FromFile(@"PNG\Black_ThePawn.png");
+        static readonly Image blackQueen = Bitmap.FromFile(@"PNG\Black_TheQueen.png");
+        static readonly Image blackKing = Bitmap.FromFile(@"PNG\Black_TheKing.png");
 
         
         Figure[] blackFigures = new Figure[] { new Rook("Top1", blackRook), new Knight("At1", blackKnight), new Bishop("Fil1", blackBishop), new Queen("Vəzir", blackQueen), new King("Şah", blackKing), new Bishop("Fil2", blackBishop), new Knight("At2", blackKnight), new Rook("Top2", blackRook), new Pawn("Piyada1", blackPawn), new Pawn("Piyada2", blackPawn), new Pawn("Piyada3", blackPawn), new Pawn("Piyada4", blackPawn), new Pawn("Piyada5", blackPawn), new Pawn("Piyada6", blackPawn), new Pawn("Piyada7", blackPawn), new Pawn("Piyada8", blackPawn) };
 
-        static Image whiteBishop = Bitmap.FromFile(@"PNG\White_TheBishop.png");
-        static Image whiteRook = Bitmap.FromFile(@"PNG\White_TheRook.png");
-        static Image whiteKnight = Bitmap.FromFile(@"PNG\White_TheKnight.png");
-        static Image whitePawn = Bitmap.FromFile(@"PNG\White_ThePawn.png");
-        static Image whiteQueen = Bitmap.FromFile(@"PNG\White_TheQueen.png");
-        static Image whiteKing = Bitmap.FromFile(@"PNG\White_TheKing.png");
+        static readonly Image  whiteBishop = Bitmap.FromFile(@"PNG\White_TheBishop.png");
+        static readonly Image whiteRook = Bitmap.FromFile(@"PNG\White_TheRook.png");
+        static readonly Image whiteKnight = Bitmap.FromFile(@"PNG\White_TheKnight.png");
+        static readonly Image whitePawn = Bitmap.FromFile(@"PNG\White_ThePawn.png");
+        static readonly Image whiteQueen = Bitmap.FromFile(@"PNG\White_TheQueen.png");
+        static readonly Image whiteKing = Bitmap.FromFile(@"PNG\White_TheKing.png");
         Figure focusedFigure = null;
 
         Figure[] whiteFigures = new Figure[] { new Rook("Top1", whiteRook), new Knight("At1", whiteKnight), new Bishop("Fil1", whiteBishop), new Queen("Vəzir", whiteQueen), new King("Şah", whiteKing), new Bishop("Fil2", whiteBishop), new Knight("At2", whiteKnight), new Rook("Top2", whiteRook), new Pawn("Piyada1", whitePawn), new Pawn("Piyada2", whitePawn), new Pawn("Piyada3", whitePawn), new Pawn("Piyada4", whitePawn), new Pawn("Piyada5", whitePawn), new Pawn("Piyada6", whitePawn), new Pawn("Piyada7", whitePawn), new Pawn("Piyada8", whitePawn) };
@@ -47,7 +47,7 @@ namespace Chess
         List<Coordinate> indexesLastArea = new();
         List<Figure> capturedBlackFigures = new();
         List<Figure> capturedWhiteFigures = new();
-        void setBlackFigureLocations()
+        void SetBlackFigureLocations()
         {
             int count = 0;
             for (int i = 0; i <= 1; i++)
@@ -85,22 +85,38 @@ namespace Chess
         }
         void RefreshOutsideOfPanel()
         {
-            int top = 0;
-            int left = 0;
+            int black_top = 0;
+            int black_left = 0;
+            int white_top = 0;
+            int white_left = pnl_chess_arena.Right;
             foreach (Figure figure in capturedBlackFigures)
             {
                 
-                figure.Top = top;
-                figure.Left =left ;
-                left += 55;
+                figure.Top = black_top;
+                figure.Left =black_left ;
+                black_left += 55;
                 this.Controls.Add(figure);
-                if (left >110) {
+                if (black_left > 110) {
 
-                    top += 55;
-                    left = 0;
+                    black_top += 55;
+                    black_left = 0;
 
                         }
                 
+            }
+            foreach(Figure figure in capturedWhiteFigures)
+            {
+                figure.Top = white_top;
+                figure.Left = white_left;
+                white_left += 55;
+                this.Controls.Add(figure);
+                if (white_left > pnl_chess_arena.Right+110)
+                {
+
+                    white_top+= 55;
+                    white_left = pnl_chess_arena.Right;
+
+                }
             }
         }
         void SetWhiteFigureLocations()
@@ -121,7 +137,7 @@ namespace Chess
                 }
             }
         }
-        bool isThisCheckAvailableForSelectedFigure(Check button,List<Coordinate> availableCoordinates)
+        bool IsThisCheckAvailableForSelectedFigure(Check button,List<Coordinate> availableCoordinates)
         {
             if(availableCoordinates is not null)
             {
@@ -235,7 +251,7 @@ namespace Chess
         {
 
             setButtonLocation();
-            setBlackFigureLocations();
+            SetBlackFigureLocations();
             SetWhiteFigureLocations();
             foreach (Figure figure in blackFigures.Concat(whiteFigures))
             {
@@ -267,7 +283,7 @@ namespace Chess
                                     buttons[row, column].Click += (s, e) =>
                                     {
 
-                                        if (focusedFigure is not null && focusedFigure.Team == CurrentSequence && isThisCheckAvailableForSelectedFigure(buttons[row, column], availableCoordinates))
+                                        if (focusedFigure is not null && focusedFigure.Team == CurrentSequence && IsThisCheckAvailableForSelectedFigure(buttons[row, column], availableCoordinates))
                                         {
                                             focusedFigure.Move(buttons[row, column]);
                                             if (focusedFigure.Team == Team.White)
@@ -294,7 +310,7 @@ namespace Chess
                                 }
                             }
                         }
-                        else if (focusedFigure.Team != figure.Team && isThisCheckAvailableForSelectedFigure(figure.Parent as Check, availableCoordinates))
+                        else if (focusedFigure.Team != figure.Team && IsThisCheckAvailableForSelectedFigure(figure.Parent as Check, availableCoordinates))
                         {
                             Figure oppositeFigure = figure;
                             
@@ -323,44 +339,17 @@ namespace Chess
                             focusedFigure = figure;
                         }
                        
-                        /*
-                         
-                                foreach (Figure oppositeFigure in blackFigures.Concat(whiteFigures))
-                                {
-
-                                    oppositeFigure.Click += (s, e) =>
-                                    {
-                                        if(focusedFigure is not null)
-                                        {
-                                            if (focusedFigure != oppositeFigure)
-                                            {
-                                                if (focusedFigure.Team != oppositeFigure.Team && isThisCheckAvailableForSelectedFigure(oppositeFigure.Parent as Check, availableCoordinates))
-                                                {
-                                                   
-
-                                                }
-                                            }
-                                        
-                                        
-                                        }
-                                    };
-                                }*/
-
+                       
 
 
 
                     };
 
                         }
-            pnl_chess_arena.Controls[0].Focus();
-            foreach(Check check in buttons)
-            {
-                check.Click += (s, e) =>
-                {
-                    MessageBox.Show(check.isFull.ToString());
-                };
-            }
-                    }
+           
+           
+           
+        }
 
 
 
@@ -390,7 +379,7 @@ namespace Chess
             pnl_chess_arena.Top = Convert.ToInt32(this.Height * 0.4);
             pnl_chess_arena.Left = Convert.ToInt32(this.Width * 0.4);
             setButtonLocation();
-            setBlackFigureLocations();
+            SetBlackFigureLocations();
             SetWhiteFigureLocations();
 
 

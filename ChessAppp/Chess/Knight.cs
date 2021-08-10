@@ -31,11 +31,55 @@ namespace Chess
 
         public override void Move(Check button)
         {
-            throw new NotImplementedException();
+            (this.Parent as Check).isFull = false;
+            button.Controls.Add(this);
+            (button as Check).isFull = true; 
         }
         public override List<Coordinate> ShowMoveOptions(int row, int column, Check[,] buttons)
         {
-            return null;
+            List<Coordinate> availableCoordinates = new();
+            //Aşağı doğru hərəkət
+            for(int i = row + 2; i >= row + 1; i--)
+            {
+                if (i == row + 2)
+                {
+                    for (int j = (column - 1 >= buttons.GetLowerBound(1) ? column - 1 : column + 1); j <= (column + 1 <= buttons.GetUpperBound(1) ? column + 1 : column); j += 2)
+                    {
+                        if (buttons[i, j].isFull)
+                        {
+                            if ((buttons[i, j].Controls[0] as Figure).Team != this.Team)
+                            {
+                                availableCoordinates.Add(new Coordinate(i, j));
+                            }
+                        }
+                        else
+                        {
+                            availableCoordinates.Add(new Coordinate(i, j));
+                        }
+                    }
+                } else if (i == row + 1)
+                {
+
+                    for (int j = (column - 2>=buttons.GetLowerBound(1)?column-2:column+2); j <= (column+2<=buttons.GetUpperBound(0)?column+2:column); j += 4)
+                        {
+                            if (buttons[i, j].isFull)
+                            {
+                                if ((buttons[i, j].Controls[0] as Figure).Team != this.Team)
+                                {
+                                    availableCoordinates.Add(new Coordinate(i, j));
+                                }
+                            }
+                            else
+                            {
+                                availableCoordinates.Add(new Coordinate(i, j));
+                            }
+                        }
+                    
+                    
+                }
+                
+            }
+            return availableCoordinates;
         }
     }
 }
