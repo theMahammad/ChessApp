@@ -9,12 +9,13 @@ namespace Chess
 {
     abstract class Figure:Button,ICloneable
     {   public Team Team { get; set; }
+        public  bool IsCaptured { get; protected set; } 
         public  new Image Image { get; set; }
         public string Color { get; set; }
         public new string Name { get; set; }
         public abstract List<Coordinate> ShowMoveOptions(int row, int column, Check[,] buttons);
         public new abstract void Move(Check button);
-        public abstract void CaptureOppositeFigure();
+        public abstract void CaptureOppositeFigure(Figure attackerFigure,Figure capturedFigure);
         public abstract void CapturedByOppositeFigure();
 
 

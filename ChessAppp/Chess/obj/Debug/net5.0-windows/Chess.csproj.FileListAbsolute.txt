@@ -25,7 +25,6 @@ C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Ches
 C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Chess\bin\Debug\net5.0-windows\ref\Chess.dll
 C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Chess\bin\Debug\net5.0-windows\Chess.pdb
 C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Chess\obj\Debug\net5.0-windows\Chess.csproj.AssemblyReference.cache
-C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Chess\obj\Debug\net5.0-windows\Chess.Form1.resources
 C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Chess\obj\Debug\net5.0-windows\Chess.Properties.Resources.resources
 C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Chess\obj\Debug\net5.0-windows\Chess.csproj.GenerateResource.cache
 C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Chess\obj\Debug\net5.0-windows\Chess.GeneratedMSBuildEditorConfig.editorconfig
@@ -36,3 +35,4 @@ C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Ches
 C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Chess\obj\Debug\net5.0-windows\ref\Chess.dll
 C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Chess\obj\Debug\net5.0-windows\Chess.pdb
 C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Chess\obj\Debug\net5.0-windows\Chess.genruntimeconfig.cache
+C:\Users\hssjx\OneDrive\Masaüstü\Şahma\MySelfProjects\ChessApp\ChessAppp\Chess\obj\Debug\net5.0-windows\Chess.ChessArena.resources
