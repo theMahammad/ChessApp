@@ -129,7 +129,7 @@ namespace Chess
 
                 if (row > 0)
                 {
-                    for (int i = row - 1; i >=row - limit; i--)
+                    for (int i = row - 1; i >=row - 1; i--)
                     {
                         for (int j = column > 0 ? column - 1 : column+1; j <= (column < 7 ? column + 1 : column); j+=2)
                         {
