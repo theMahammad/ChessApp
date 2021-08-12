@@ -18,7 +18,7 @@ namespace Chess
             this.pnl_chess_arena.Anchor = AnchorStyles.None;
             Array.ForEach(blackFigures, figure => figure.Team = Team.Black);
             Array.ForEach(whiteFigures, figure => figure.Team = Team.White);
-           
+
 
 
         }
@@ -31,10 +31,10 @@ namespace Chess
         static readonly Image blackQueen = Bitmap.FromFile(@"PNG\Black_TheQueen.png");
         static readonly Image blackKing = Bitmap.FromFile(@"PNG\Black_TheKing.png");
 
-        
+
         Figure[] blackFigures = new Figure[] { new Rook("Top1", blackRook), new Knight("At1", blackKnight), new Bishop("Fil1", blackBishop), new Queen("Vəzir", blackQueen), new King("Şah", blackKing), new Bishop("Fil2", blackBishop), new Knight("At2", blackKnight), new Rook("Top2", blackRook), new Pawn("Piyada1", blackPawn), new Pawn("Piyada2", blackPawn), new Pawn("Piyada3", blackPawn), new Pawn("Piyada4", blackPawn), new Pawn("Piyada5", blackPawn), new Pawn("Piyada6", blackPawn), new Pawn("Piyada7", blackPawn), new Pawn("Piyada8", blackPawn) };
 
-        static readonly Image  whiteBishop = Bitmap.FromFile(@"PNG\White_TheBishop.png");
+        static readonly Image whiteBishop = Bitmap.FromFile(@"PNG\White_TheBishop.png");
         static readonly Image whiteRook = Bitmap.FromFile(@"PNG\White_TheRook.png");
         static readonly Image whiteKnight = Bitmap.FromFile(@"PNG\White_TheKnight.png");
         static readonly Image whitePawn = Bitmap.FromFile(@"PNG\White_ThePawn.png");
@@ -47,6 +47,61 @@ namespace Chess
         List<Coordinate> indexesLastArea = new();
         List<Figure> capturedBlackFigures = new();
         List<Figure> capturedWhiteFigures = new();
+        internal static bool CheckMateChance(int row,int column,Figure figure,Check[,] buttons)
+        {
+            List < Coordinate > availableCoordinates = figure.ShowMoveOptions(row, column, buttons); ;
+            foreach(Coordinate coordinate in availableCoordinates) {
+                Check button = buttons[coordinate.Row, coordinate.Column];
+                if (button.Controls.Count > 0)
+                {
+                    if(button.Controls[0] is King)
+                    {
+                        (button.Controls[0] as King).InDeep = true;
+                        return true;
+
+                    }
+                }
+            }
+            
+            
+
+            return false;
+        }
+        
+        bool SaveKingFromOppositeChance(Figure attackerFigure,int row,int column,Check[,] buttons)
+        {
+            List<Coordinate> availableCoordinates = attackerFigure.ShowMoveOptions(row, column, buttons);
+            List<int> indexesOfAttackerFigureCheck = getCheckIndexes(attackerFigure.Parent);
+            if(attackerFigure.Team is Team.White)
+            {
+                List<List<Coordinate>> allAvailableFigureCoordinates = new();
+                foreach(Figure figure in blackFigures)
+                {
+                    if (figure.IsCaptured)
+                    {
+                        continue;
+                    }
+                    List<int> indexes = getCheckIndexes(figure.Parent);
+                    List<Coordinate> availableCoordinatesForThisFigure=  figure.ShowMoveOptions(indexes[0], indexes[1], buttons);
+                    allAvailableFigureCoordinates.Add(availableCoordinatesForThisFigure);
+                
+                }
+                foreach(List<Coordinate> coordinates in allAvailableFigureCoordinates)
+                {
+                    foreach(Coordinate coordinate in coordinates)
+                    {
+                       if(coordinate.Row == indexesOfAttackerFigureCheck[0] && coordinate.Column == indexesOfAttackerFigureCheck[1])
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            
+            return false;
+        }
+        
+        
         void SetBlackFigureLocations()
         {
             int count = 0;
@@ -274,9 +329,23 @@ namespace Chess
 
                                 for (int i = 0; i < availableCoordinates.Count; i++)
                                 {
+                                    Figure king = null;
                                     int row = availableCoordinates[i].Row;
                                     int column = availableCoordinates[i].Column;
-                                    buttons[row, column].BackColor = Color.GreenYellow;
+                                    if (buttons[row, column].Controls.Count > 0 && (buttons[row, column].Controls[0] as Figure) is King)
+                                    {
+                                        
+                                            king = (buttons[row, column].Controls[0] as Figure);
+                                            king.Enabled = false;
+                                            
+
+                                        
+                                    }
+                                    else
+                                    {
+                                        buttons[row, column].BackColor = Color.GreenYellow;
+                                    }
+                                   
 
 
 
@@ -285,7 +354,19 @@ namespace Chess
 
                                         if (focusedFigure is not null && focusedFigure.Team == CurrentSequence && IsThisCheckAvailableForSelectedFigure(buttons[row, column], availableCoordinates))
                                         {
-                                            focusedFigure.Move(buttons[row, column]);
+                                            ChessManager.Move(focusedFigure, buttons[row, column]);
+                                     
+                                            if (CheckMateChance(row, column, focusedFigure, buttons))
+                                            {
+                                                MessageBox.Show("Şah!");
+                                                if (SaveKingFromOppositeChance(focusedFigure, row, column, buttons))
+                                                {
+                                                    MessageBox.Show("Mat olmaram!");
+
+
+                                                }
+                                            }
+                                            
                                             if (focusedFigure.Team == Team.White)
                                             {
                                                 CurrentSequence = Team.Black;
@@ -294,6 +375,8 @@ namespace Chess
                                             {
                                                 CurrentSequence = Team.White;
                                             }
+                                           
+                                            
 
                                             
                                             SetToDefaultColor();
@@ -313,17 +396,15 @@ namespace Chess
                         else if (focusedFigure.Team != figure.Team && IsThisCheckAvailableForSelectedFigure(figure.Parent as Check, availableCoordinates))
                         {
                             Figure oppositeFigure = figure;
-                            
-
-
-                           
                             List<int> indexes = getCheckIndexes(oppositeFigure.Parent);
-                            oppositeFigure.Parent.Controls.Remove(oppositeFigure);
-
-
-                            (focusedFigure.Parent as Check).isFull = false;
-                            buttons[indexes[0], indexes[1]].Controls.Add(focusedFigure);
-                            
+                            int row = indexes[0];
+                            int column = indexes[1];
+                            ChessManager.Move(focusedFigure,(oppositeFigure.Parent as Check));
+                            if (CheckMateChance(row, column, focusedFigure, buttons))
+                            {
+                                MessageBox.Show("Şah!");
+                            }
+                       
                             focusedFigure = null;
                             
                             SetLocationByItsTeam(oppositeFigure);

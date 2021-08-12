@@ -24,7 +24,7 @@ namespace Chess
             throw new NotImplementedException();
         }
 
-        public override void CaptureOppositeFigure()
+        public override void CaptureOppositeFigure(Figure attackerFigure, Figure capturedFigure)
         {
             throw new NotImplementedException();
         }

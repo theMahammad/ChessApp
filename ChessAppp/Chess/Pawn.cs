@@ -21,9 +21,14 @@ namespace Chess
             throw new NotImplementedException();
         }
 
-        public override void CaptureOppositeFigure()
+        public override void CaptureOppositeFigure(Figure attackerFigure, Figure capturedFigure)
         {
-            throw new NotImplementedException();
+            Check check = new();
+            Check checkAttacker = new();
+            checkAttacker.isFull = false;
+            check.Controls.Add(attackerFigure);
+            check.Controls.Remove(capturedFigure);
+
         }
 
         public override void Move(Check button)

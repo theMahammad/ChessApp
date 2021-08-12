@@ -10,7 +10,7 @@ namespace Chess
 {
     class King : Figure
     {
-
+        public bool InDeep { get; set; } = false;
 
         public King(string name, Image bgImg) : base(name, bgImg)
         {
@@ -21,7 +21,7 @@ namespace Chess
             throw new NotImplementedException();
         }
 
-        public override void CaptureOppositeFigure()
+        public override void CaptureOppositeFigure(Figure attackerFigure, Figure capturedFigure)
         {
             throw new NotImplementedException();
         }

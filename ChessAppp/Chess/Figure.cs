@@ -7,9 +7,9 @@ using System.Windows.Forms;
 using System.Drawing;
 namespace Chess
 {
-    abstract class Figure:Button,ICloneable
+     abstract class Figure:Button,ICloneable
     {   public Team Team { get; set; }
-        public  bool IsCaptured { get; protected set; } 
+        public bool IsCaptured { get; set; } = false;
         public  new Image Image { get; set; }
         public string Color { get; set; }
         public new string Name { get; set; }
