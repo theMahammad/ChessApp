@@ -22,8 +22,9 @@ namespace Chess
 
 
         }
+        public static bool KingInDeep = false;
         Team CurrentSequence = Team.White;
-        Check[,] buttons = new Check[8, 8];
+        static Check[,] buttons = new Check[8, 8];
         static readonly Image blackBishop = Bitmap.FromFile(@"PNG\Black_TheBishop.png");
         static readonly Image blackRook = Bitmap.FromFile(@"PNG\Black_TheRook.png");
         static readonly Image blackKnight = Bitmap.FromFile(@"PNG\Black_TheKnight.png");
@@ -67,39 +68,55 @@ namespace Chess
 
             return false;
         }
-        
-        bool SaveKingFromOppositeChance(Figure attackerFigure,int row,int column,Check[,] buttons)
+        HashSet<Figure> availableFiguresForMoving = new();
+        HashSet<Figure> attackersFigure = new();
+        bool SaveKingFromOppositeChance(Figure attackerFigure, int row, int column, Check[,] buttons)
         {
+            bool saveChance = false;
             List<Coordinate> availableCoordinates = attackerFigure.ShowMoveOptions(row, column, buttons);
             List<int> indexesOfAttackerFigureCheck = getCheckIndexes(attackerFigure.Parent);
-            if(attackerFigure.Team is Team.White)
-            {
-                List<List<Coordinate>> allAvailableFigureCoordinates = new();
-                foreach(Figure figure in blackFigures)
+            Dictionary<Figure, List<Coordinate>> allAvailableFigureCoordinates = new();
+           
+
+                foreach (Figure figure in (attackerFigure.Team is Team.White?blackFigures:whiteFigures))
                 {
                     if (figure.IsCaptured)
                     {
                         continue;
                     }
                     List<int> indexes = getCheckIndexes(figure.Parent);
-                    List<Coordinate> availableCoordinatesForThisFigure=  figure.ShowMoveOptions(indexes[0], indexes[1], buttons);
-                    allAvailableFigureCoordinates.Add(availableCoordinatesForThisFigure);
-                
+                    List<Coordinate> availableCoordinatesForThisFigure = figure.ShowMoveOptions(indexes[0], indexes[1], buttons);
+                    allAvailableFigureCoordinates.Add(figure, availableCoordinatesForThisFigure);
+
                 }
-                foreach(List<Coordinate> coordinates in allAvailableFigureCoordinates)
+
+
+            
+
+           
+              
+
+              
+            
+            foreach (Figure figure in allAvailableFigureCoordinates.Keys)
+            {
+                foreach (Coordinate coordinate in allAvailableFigureCoordinates[figure])
                 {
-                    foreach(Coordinate coordinate in coordinates)
+                    if (coordinate.Row == indexesOfAttackerFigureCheck[0] && coordinate.Column == indexesOfAttackerFigureCheck[1])
                     {
-                       if(coordinate.Row == indexesOfAttackerFigureCheck[0] && coordinate.Column == indexesOfAttackerFigureCheck[1])
-                        {
-                            return true;
-                        }
+                        saveChance = true;
+                        availableFiguresForMoving.Add(figure);
                     }
                 }
             }
-            
-            return false;
+
+
+
+
+            return saveChance;
+
         }
+    
         
         
         void SetBlackFigureLocations()
@@ -265,7 +282,7 @@ namespace Chess
             }
         }
         List<Coordinate> availableCoordinates = null;
-        List<int> getCheckIndexes(Control button)
+        public static List<int> getCheckIndexes(Control button)
         {
             List<int> indexes = new();
             for (int row = 0; row <= buttons.GetUpperBound(0); row++)
@@ -323,74 +340,140 @@ namespace Chess
 
                             if (focusedFigure.Team == CurrentSequence)
                             {
-                                List<int> indexes = getCheckIndexes(figure.Parent);
-                                availableCoordinates = figure.ShowMoveOptions(indexes[0], indexes[1], buttons);
-
-
-                                for (int i = 0; i < availableCoordinates.Count; i++)
+                                if (KingInDeep)
                                 {
-                                    Figure king = null;
-                                    int row = availableCoordinates[i].Row;
-                                    int column = availableCoordinates[i].Column;
-                                    if (buttons[row, column].Controls.Count > 0 && (buttons[row, column].Controls[0] as Figure) is King)
-                                    {
-                                        
-                                            king = (buttons[row, column].Controls[0] as Figure);
-                                            king.Enabled = false;
-                                            
-
-                                        
-                                    }
-                                    else
-                                    {
-                                        buttons[row, column].BackColor = Color.GreenYellow;
-                                    }
-                                   
-
-
-
-                                    buttons[row, column].Click += (s, e) =>
-                                    {
-
-                                        if (focusedFigure is not null && focusedFigure.Team == CurrentSequence && IsThisCheckAvailableForSelectedFigure(buttons[row, column], availableCoordinates))
+                                    if(availableFiguresForMoving.Contains(focusedFigure)){
+                                        List<int> indexes = getCheckIndexes(focusedFigure.Parent);
+                                        availableCoordinates = focusedFigure.ShowMoveOptions(indexes[0], indexes[1], buttons);
+                                        for (int i = 0; i < availableCoordinates.Count; i++)
                                         {
-                                            ChessManager.Move(focusedFigure, buttons[row, column]);
-                                     
-                                            if (CheckMateChance(row, column, focusedFigure, buttons))
-                                            {
-                                                MessageBox.Show("Şah!");
-                                                if (SaveKingFromOppositeChance(focusedFigure, row, column, buttons))
-                                                {
-                                                    MessageBox.Show("Mat olmaram!");
-
-
-                                                }
-                                            }
-                                            
-                                            if (focusedFigure.Team == Team.White)
-                                            {
-                                                CurrentSequence = Team.Black;
-                                            }
-                                            else
-                                            {
-                                                CurrentSequence = Team.White;
-                                            }
                                            
-                                            
+                                            int row = availableCoordinates[i].Row;
+                                            int column = availableCoordinates[i].Column;
+                                            buttons[row, column].BackColor = Color.GreenYellow;
 
-                                            
-                                            SetToDefaultColor();
-                                            availableCoordinates.Clear();
-                                            focusedFigure = null;
+
+
+
+                                            buttons[row, column].Click += (s, e) =>
+                                            {
+
+                                                if (focusedFigure is not null && focusedFigure.Team == CurrentSequence && IsThisCheckAvailableForSelectedFigure(buttons[row, column], availableCoordinates))
+                                                {
+                                                    ChessManager.Move(focusedFigure, buttons[row, column]);
+                                                    KingInDeep = false;
+                                                    if (CheckMateChance(row, column, focusedFigure, buttons))
+                                                    {
+                                                        MessageBox.Show("Şah!");
+                                                        KingInDeep = true;
+                                                        if (SaveKingFromOppositeChance(focusedFigure, row, column, buttons))
+                                                        {
+                                                            MessageBox.Show("Mat olmaram!");
+                                                            foreach (Figure figure in availableFiguresForMoving)
+                                                            {
+                                                                figure.BackColor = Color.Red;
+                                                            }
+
+                                                        }
+                                                    }
+
+                                                    if (focusedFigure.Team == Team.White)
+                                                    {
+                                                        CurrentSequence = Team.Black;
+                                                    }
+                                                    else
+                                                    {
+                                                        CurrentSequence = Team.White;
+                                                    }
+
+
+
+
+                                                    SetToDefaultColor();
+                                                    availableCoordinates.Clear();
+                                                    focusedFigure = null;
+                                                }
+
+
+
+
+
+                                            };
+
                                         }
-
-
-
-
-
-                                    };
-
+                                    }
                                 }
+                                else
+                                {
+                                    List<int> indexes = getCheckIndexes(focusedFigure.Parent);
+                                  
+                                   
+                                        availableCoordinates = focusedFigure.ShowMoveOptions(indexes[0], indexes[1], buttons);
+
+                                    
+
+                                    for (int i = 0; i < availableCoordinates.Count; i++)
+                                    {
+
+                                        int row = availableCoordinates[i].Row;
+                                        int column = availableCoordinates[i].Column;
+                                        buttons[row, column].BackColor = Color.GreenYellow;
+
+
+
+
+                                        buttons[row, column].Click += (s, e) =>
+                                        {
+
+                                            if (focusedFigure is not null && focusedFigure.Team == CurrentSequence && IsThisCheckAvailableForSelectedFigure(buttons[row, column], availableCoordinates))
+                                            {
+                                                ChessManager.Move(focusedFigure, buttons[row, column]);
+
+                                                if (CheckMateChance(row, column, focusedFigure, buttons))
+                                                {
+                                                    MessageBox.Show("Şah!");
+                                                    KingInDeep = true;
+                                                    attackersFigure.Add(focusedFigure);
+                                                    if (SaveKingFromOppositeChance(focusedFigure, row, column, buttons))
+                                                    {
+                                                        MessageBox.Show("Mat olmaram!");
+                                                        foreach (Figure figure in availableFiguresForMoving)
+                                                        {
+                                                            figure.BackColor = Color.Red;
+                                                        }
+
+                                                    }
+                                                }
+
+                                                if (focusedFigure.Team == Team.White)
+                                                {
+                                                    CurrentSequence = Team.Black;
+                                                }
+                                                else
+                                                {
+                                                    CurrentSequence = Team.White;
+                                                }
+
+
+
+
+                                                SetToDefaultColor();
+                                                availableCoordinates.Clear();
+                                                focusedFigure = null;
+                                            }
+
+
+
+
+
+                                        };
+
+                                    }
+                                }
+                               
+
+
+                                
                             }
                         }
                         else if (focusedFigure.Team != figure.Team && IsThisCheckAvailableForSelectedFigure(figure.Parent as Check, availableCoordinates))
@@ -427,6 +510,13 @@ namespace Chess
                     };
 
                         }
+            foreach(Check button in buttons)
+            {
+                button.Click += (s, e) =>
+                {
+                    MessageBox.Show(button.isFull.ToString());
+                };
+            }
            
            
            

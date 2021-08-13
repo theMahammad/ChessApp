@@ -101,6 +101,7 @@ namespace Chess
                             else
                             {
                                 availableCoordinates.Add(new Coordinate(i, j));
+                                
                             }
                         }
                     }

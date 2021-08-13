@@ -10,6 +10,7 @@ namespace Chess
 {
     class Rook : Figure
     {
+        public bool Moved { get; set; } = false;
         public override object Clone()
         {
             return MemberwiseClone();

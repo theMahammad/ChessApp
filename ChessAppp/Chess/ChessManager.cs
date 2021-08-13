@@ -14,6 +14,11 @@ namespace Chess
             {if((figure as Pawn).usedAlreadyItsFirstRight==false)
                 (figure as Pawn).usedAlreadyItsFirstRight = true;
             }
+            else if(figure is Rook)
+            {
+                if ((figure as Rook).Moved == false)
+                    (figure as Rook).Moved = true;
+            }
             
             (figure.Parent as Check).isFull = false;
             if (check.Controls.Count > 0)
@@ -24,6 +29,7 @@ namespace Chess
                     check.Controls.Remove(figureInThisCheck);
                 }
             }
+         
                 check.Controls.Add(figure);
                 check.isFull = true;
 
